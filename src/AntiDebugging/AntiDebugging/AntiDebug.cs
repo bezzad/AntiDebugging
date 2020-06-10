@@ -39,6 +39,19 @@ namespace AntiDebugging
         [DllImport("ntdll.dll", SetLastError = true, ExactSpelling = true)]
         internal static extern NtStatus NtQuerySystemInformation([In] SystemInformationClass systemInformationClass, IntPtr systemInformation, [In] int systemInformationLength, [Out][Optional] out int returnLength);
 
+        [DllImport("ntdll.dll")]
+        internal static extern NtStatus NtSetInformationThread(IntPtr threadHandle, ThreadInformationClass threadInformationClass, IntPtr threadInformation, int threadInformationLength);
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+        [DllImport("kernel32.dll")]
+        static extern uint SuspendThread(IntPtr hThread);
+        [DllImport("kernel32.dll")]
+        static extern int ResumeThread(IntPtr hThread);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern bool CloseHandle(IntPtr handle);
+
         static readonly IntPtr InvalidHandleValue = new IntPtr(-1);
 
 
@@ -154,5 +167,42 @@ namespace AntiDebugging
             return false;
         }
 
+        public static void HideOsThreads()
+        {
+            var currentThreads = Process.GetCurrentProcess().Threads;
+
+            foreach (ProcessThread thread in currentThreads)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("[GetOSThreads]: thread.Id {0:X}", thread.Id);
+
+                var pOpenThread = OpenThread(ThreadAccess.SetInformation, false, (uint)thread.Id);
+
+                if (pOpenThread == IntPtr.Zero)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("[GetOSThreads]: skipped thread.Id {0:X}", thread.Id);
+                    continue;
+                }
+
+                if (HideThreadFromDebugger(pOpenThread))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("[GetOSThreads]: thread.Id {0:X} hidden from debugger.", thread.Id);
+                }
+
+                CloseHandle(pOpenThread);
+            }
+        }
+
+        /// <summary>
+        /// Hide the thread from debug events.
+        /// </summary>
+        public static bool HideThreadFromDebugger(IntPtr handle)
+        {
+            var nStatus = NtSetInformationThread(handle, ThreadInformationClass.ThreadHideFromDebugger, IntPtr.Zero, 0);
+
+            return nStatus == NtStatus.Success;
+        }
     }
 }

@@ -43,6 +43,8 @@ namespace AntiDebugging.Demo
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebugPort)}: {checkDebugPort}");
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckKernelDebugInformation)}: {checkKernelDebugInformation}");
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.DetachFromDebuggerProcess)}: {detachFromDebuggerProcess}");
+            AntiDebug.HideOsThreads();
+
             if (isProcessRemote || isManagedCodesAttached || isUnManagedCodesAttached)
             {
                 Console.WriteLine("Debugger detected!");
