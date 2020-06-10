@@ -34,9 +34,15 @@ namespace AntiDebugging.Demo
             var isProcessRemote = AntiDebug.CheckRemoteDebugger();
             var isManagedCodesAttached = AntiDebug.CheckDebuggerManagedPresent();
             var isUnManagedCodesAttached = AntiDebug.CheckDebuggerUnmanagedPresent();
+            var checkDebugPort = AntiDebug.CheckDebugPort();
+            var checkKernelDebugInformation = AntiDebug.CheckKernelDebugInformation();
+            var detachFromDebuggerProcess = AntiDebug.DetachFromDebuggerProcess();
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckRemoteDebugger)}: {isProcessRemote}");
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebuggerManagedPresent)}: {isManagedCodesAttached}");
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebuggerUnmanagedPresent)}: {isUnManagedCodesAttached}");
+            Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebugPort)}: {checkDebugPort}");
+            Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckKernelDebugInformation)}: {checkKernelDebugInformation}");
+            Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.DetachFromDebuggerProcess)}: {detachFromDebuggerProcess}");
             if (isProcessRemote || isManagedCodesAttached || isUnManagedCodesAttached)
             {
                 Console.WriteLine("Debugger detected!");

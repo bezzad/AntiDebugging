@@ -74,46 +74,39 @@ namespace AntiDebugging
             return bApiRet && isDebuggerPresent;
         }
 
-        public static int CheckDebugPort()
+        public static bool CheckDebugPort()
         {
-            NtStatus status;
-            IntPtr debugPort = new IntPtr(0);
-            int returnLength;
-
-            status = NtQueryInformationProcess(Process.GetCurrentProcess().Handle,
+            var debugPort = new IntPtr(0);
+            var status = NtQueryInformationProcess(Process.GetCurrentProcess().Handle,
                 ProcessInfoClass.ProcessDebugPort, out debugPort,
-                Marshal.SizeOf(debugPort), out returnLength);
+                Marshal.SizeOf(debugPort), out var returnLength);
 
             if (status == NtStatus.Success)
             {
                 if (debugPort == new IntPtr(-1))
                 {
                     Console.WriteLine("DebugPort : {0:X}", debugPort);
-                    return 1;
+                    return true;
                 }
             }
 
-            return 0;
+            return false;
         }
 
         public static bool DetachFromDebuggerProcess()
         {
-            IntPtr hDebugObject = InvalidHandleValue;
             var dwFlags = 0U;
-            NtStatus ntStatus;
-            int retLength1;
-            int retLength2;
 
             unsafe
             {
-                ntStatus = NtQueryInformationProcess(Process.GetCurrentProcess().Handle, ProcessInfoClass.ProcessDebugObjectHandle, out hDebugObject, IntPtr.Size, out retLength1);
+                var ntStatus = NtQueryInformationProcess(Process.GetCurrentProcess().Handle, ProcessInfoClass.ProcessDebugObjectHandle, out var hDebugObject, IntPtr.Size, out _);
 
                 if (ntStatus != NtStatus.Success)
                 {
                     return false;
                 }
 
-                ntStatus = NtSetInformationDebugObject(hDebugObject, DebugObjectInformationClass.DebugObjectFlags, new IntPtr(&dwFlags), Marshal.SizeOf(dwFlags), out retLength2);
+                ntStatus = NtSetInformationDebugObject(hDebugObject, DebugObjectInformationClass.DebugObjectFlags, new IntPtr(&dwFlags), Marshal.SizeOf(dwFlags), out _);
 
                 if (ntStatus != NtStatus.Success)
                 {

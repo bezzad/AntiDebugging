@@ -1,4 +1,4 @@
-﻿namespace AntiDebugging
+﻿namespace AntiDebugging.WinStructs
 {
     internal enum DebugEventType : int
     {

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace AntiDebugging
+namespace AntiDebugging.WinStructs
 {
     [StructLayout(LayoutKind.Sequential)]
     internal struct DebugEvent
