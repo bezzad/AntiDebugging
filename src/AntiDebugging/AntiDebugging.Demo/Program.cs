@@ -8,8 +8,14 @@ namespace AntiDebugging.Demo
         static void Main(string[] args)
         {
             Console.WriteLine($"Process {Process.GetCurrentProcess().Id} is running");
-            if (PerformChecks() == false)
+            if (PerformChecks())
             {
+                Environment.FailFast("Debugger Detected");
+            }
+            else
+            {
+                AntiDump.ProtectDump();
+
                 Console.WriteLine("Test: Attaching to process in runtime...");
                 var ppid = 0;
                 if (args != null && args.Length > 0)
