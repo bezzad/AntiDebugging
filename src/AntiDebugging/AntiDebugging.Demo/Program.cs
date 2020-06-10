@@ -15,6 +15,7 @@ namespace AntiDebugging.Demo
             else
             {
                 AntiDump.ProtectDump();
+                Scanner.ScanAndKill(()=> Console.WriteLine("Scan and kill system any malware"));
 
                 Console.WriteLine("Test: Attaching to process in runtime...");
                 var ppid = 0;

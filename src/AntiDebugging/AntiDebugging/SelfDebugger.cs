@@ -6,6 +6,10 @@ using AntiDebugging.WinStructs;
 
 namespace AntiDebugging
 {
+    /// <summary>
+    /// This will spawn a watcher process to monitor a parent, and each will PInvoke a debugger thread on each other.
+    /// If either process is killed (parent or child), they both exit, protecting each other from being debugged.
+    /// </summary>
     public static class SelfDebugger
     {
         public const int DbgContinue = 0x00010002;
