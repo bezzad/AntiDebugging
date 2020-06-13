@@ -46,12 +46,18 @@ namespace AntiDebugging.Demo
             var isUnManagedCodesAttached = AntiDebug.CheckDebuggerUnmanagedPresent();
             var checkDebugPort = AntiDebug.CheckDebugPort();
             var checkKernelDebugInformation = AntiDebug.CheckKernelDebugInformation();
+            var detectEmulation = ProtectionHelper.DetectEmulation();
+            var detectSandbox = ProtectionHelper.DetectSandbox();
+            var detectVirtualMachine = ProtectionHelper.DetectVirtualMachine();
             var detachFromDebuggerProcess = AntiDebug.DetachFromDebuggerProcess();
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckRemoteDebugger)}: {isProcessRemote}");
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebuggerManagedPresent)}: {isManagedCodesAttached}");
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebuggerUnmanagedPresent)}: {isUnManagedCodesAttached}");
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebugPort)}: {checkDebugPort}");
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckKernelDebugInformation)}: {checkKernelDebugInformation}");
+            Console.WriteLine($"{nameof(ProtectionHelper)}.{nameof(ProtectionHelper.DetectEmulation)}: {detectEmulation}");
+            Console.WriteLine($"{nameof(ProtectionHelper)}.{nameof(ProtectionHelper.DetectSandbox)}: {detectSandbox}");
+            Console.WriteLine($"{nameof(ProtectionHelper)}.{nameof(ProtectionHelper.DetectVirtualMachine)}: {detectVirtualMachine}");
             Console.WriteLine($"{nameof(AntiDebug)}.{nameof(AntiDebug.DetachFromDebuggerProcess)}: {detachFromDebuggerProcess}");
             AntiDebug.HideOsThreads();
 

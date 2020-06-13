@@ -69,7 +69,10 @@ namespace AntiDebugging
                 {
                     foreach (var managementBaseObject in managementObjectCollection)
                     {
-                        if ((managementBaseObject["Manufacturer"].ToString().ToLower() == "microsoft corporation" && managementBaseObject["Model"].ToString().ToUpperInvariant().Contains("VIRTUAL")) || managementBaseObject["Manufacturer"].ToString().ToLower().Contains("vmware") || managementBaseObject["Model"].ToString() == "VirtualBox")
+                        if ((managementBaseObject["Manufacturer"].ToString().ToLower() == "microsoft corporation" && 
+                             managementBaseObject["Model"].ToString().ToUpperInvariant().Contains("VIRTUAL")) || 
+                            managementBaseObject["Manufacturer"].ToString().ToLower().Contains("vmware") || 
+                            managementBaseObject["Model"].ToString() == "VirtualBox")
                         {
                             return true;
                         }
@@ -78,7 +81,8 @@ namespace AntiDebugging
             }
             foreach (var managementBaseObject2 in new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController").Get())
             {
-                if (managementBaseObject2.GetPropertyValue("Name").ToString().Contains("VMware") && managementBaseObject2.GetPropertyValue("Name").ToString().Contains("VBox"))
+                if (managementBaseObject2.GetPropertyValue("Name").ToString().Contains("VMware") && 
+                    managementBaseObject2.GetPropertyValue("Name").ToString().Contains("VBox"))
                 {
                     return true;
                 }
