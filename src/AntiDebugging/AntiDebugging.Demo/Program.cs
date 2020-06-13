@@ -8,7 +8,7 @@ namespace AntiDebugging.Demo
         static void Main(string[] args)
         {
             Console.WriteLine($"Process {Process.GetCurrentProcess().Id} is running...");
-            var ip = ProtectionHelper.Ip();
+            var ip = HardwareHelper.Ip();
             Console.WriteLine($"PC is from Internet Protocol Address: {ip}");
 
             if (PerformChecks())
@@ -18,7 +18,7 @@ namespace AntiDebugging.Demo
             else
             {
                 AntiDump.ProtectDump();
-                Scanner.ScanAndKill(()=> Console.WriteLine("Scan and kill system any malware"));
+                Scanner.ScanAndKill(() => Console.WriteLine("Scan and kill system any malware"));
 
                 Console.WriteLine("Test: Attaching to process in runtime...");
                 var ppid = 0;
@@ -57,6 +57,7 @@ namespace AntiDebugging.Demo
 
             if (isProcessRemote || isManagedCodesAttached || isUnManagedCodesAttached)
             {
+                ProtectionHelper.FreezeMouse();
                 ProtectionHelper.ShowCmd("Protector", "Active debugger found!", "C");
                 return true;
             }

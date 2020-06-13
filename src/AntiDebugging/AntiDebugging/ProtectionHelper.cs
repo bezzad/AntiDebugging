@@ -53,14 +53,6 @@ namespace AntiDebugging
             BlockInput(TurnedOnFreezeMouse);
         }
 
-        public static void FreezeWindowsProcess()
-        {
-            while (TurnedOnFreezeMouse)
-            {
-                BlockInput(TurnedOnFreezeMouse);
-            }
-        }
-
         public static bool DetectEmulation()
         {
             long tickCount = Environment.TickCount;
@@ -95,15 +87,7 @@ namespace AntiDebugging
             return false;
         }
 
-        public static IPAddress Ip()
-        {
-            var wc = new WebClient();
-            var strInternetProtocol = wc.DownloadString("https://ipv4.wtfismyip.com/text");
-            if (IPAddress.TryParse(strInternetProtocol.Trim(), out var ip))
-                return ip;
-            return null;
-        }
-
+        
         public static void ShowCmd(string title, string text, string color, int timeoutSec = 10)
         {
             Process.Start(new ProcessStartInfo("cmd.exe", "/c " + $"START CMD /C \"COLOR {color} && TITLE {title} && ECHO {text} && TIMEOUT {timeoutSec}\"")
@@ -111,6 +95,15 @@ namespace AntiDebugging
                 CreateNoWindow = true, 
                 UseShellExecute = false
             });
+        }
+
+
+        private static void FreezeWindowsProcess()
+        {
+            while (TurnedOnFreezeMouse)
+            {
+                BlockInput(TurnedOnFreezeMouse);
+            }
         }
     }
 }
