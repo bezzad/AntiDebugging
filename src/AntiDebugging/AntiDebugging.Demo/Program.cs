@@ -7,7 +7,10 @@ namespace AntiDebugging.Demo
     {
         static void Main(string[] args)
         {
-            Console.WriteLine($"Process {Process.GetCurrentProcess().Id} is running");
+            Console.WriteLine($"Process {Process.GetCurrentProcess().Id} is running...");
+            var ip = ProtectionHelper.Ip();
+            Console.WriteLine($"PC is from Internet Protocol Address: {ip}");
+
             if (PerformChecks())
             {
                 Environment.FailFast("Debugger Detected");
@@ -54,7 +57,7 @@ namespace AntiDebugging.Demo
 
             if (isProcessRemote || isManagedCodesAttached || isUnManagedCodesAttached)
             {
-                Console.WriteLine("Debugger detected!");
+                ProtectionHelper.ShowCmd("Protector", "Active debugger found!", "C");
                 return true;
             }
 
