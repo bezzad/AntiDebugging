@@ -3,8 +3,6 @@ image: Visual Studio 2019
 configuration: Release
 platform: Any CPU
 before_build:
-  - cmd: dotnet restore src\AntiDebugging\AntiDebugging.sln
+- cmd: dotnet restore src\AntiDebugging\AntiDebugging.sln
 build:
   verbosity: normal
-  
-deploy: off
