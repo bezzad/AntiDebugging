@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>1.1.1</Version>
+    <Version>1.2.0</Version>
     <Authors>Behzad Khosravifar</Authors>
     <Description>C# Anti-Debug and Anti-Dumping techniques using Win32/NT API functions. There are certain functions/methods like the anti-dump that were created by other people.</Description>
-    <Copyright />
+    <Copyright>2020</Copyright>
     <PackageTags>antidebug, antidebugging, net-antidebug, antidump, anti-virtualmachine, antivm, anti-emulation</PackageTags>
     <PackageReleaseNotes>* PoC: Prevent a debugger from attaching to managed .NET processes via a watcher process code pattern.
 * Anti Virtual Machine &amp; VPS
@@ -20,6 +20,12 @@
 * Hides current process OS thread ( managed threads soon )
 * Scan and Kill debuggers (ollydbg, x32dbg, x64dbg, Immunity, MegaDumper, etc)</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>logo.ico</PackageIcon>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <PackageProjectUrl>https://github.com/bezzad/AntiDebugging</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/bezzad/AntiDebugging.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -34,6 +40,17 @@
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
     <PackageReference Include="System.Management" Version="4.7.0" />
     <PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="logo.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
