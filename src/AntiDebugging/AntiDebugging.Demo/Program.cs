@@ -8,11 +8,9 @@ namespace AntiDebugging.Demo
     {
         static void Main(string[] args)
         {
-            var mainLibVersion = Assembly.GetAssembly(typeof(AntiDebugging.AntiDebug))?.GetName()?.Version.ToString(3) ?? "1.0.0";
+            var mainLibVersion = Assembly.GetAssembly(typeof(AntiDebug))?.GetName().Version.ToString(3) ?? "1.0.0";
             Console.Title = $"Anti Debugging v{mainLibVersion}";
             Console.WriteLine($"Process {Process.GetCurrentProcess().Id} is running...");
-            //            var ip = HardwareHelper.Ip();
-            //          Console.WriteLine($"PC is from Internet Protocol Address: {ip}");
 
             if (PerformChecks())
             {
@@ -32,6 +30,9 @@ namespace AntiDebugging.Demo
                 // SelfDebugger.DebugSelf(ppid);
                 //
                 // PerformChecks();
+
+                Console.WriteLine();
+                WriteColoredResult("Any debugger not found. Application run in a safe environment.", ConsoleColor.DarkGreen);
             }
 
             Console.ReadLine();
@@ -52,15 +53,15 @@ namespace AntiDebugging.Demo
             var detectSandbox = ProtectionHelper.DetectSandbox();
             var detectVirtualMachine = ProtectionHelper.DetectVirtualMachine();
             var detachFromDebuggerProcess = AntiDebug.DetachFromDebuggerProcess();
-            WriteResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckRemoteDebugger)}", isProcessRemote);
-            WriteResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebuggerManagedPresent)}", isManagedCodesAttached);
-            WriteResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebuggerUnmanagedPresent)}", isUnManagedCodesAttached);
-            WriteResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebugPort)}", checkDebugPort);
-            WriteResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckKernelDebugInformation)}", checkKernelDebugInformation);
-            WriteResult($"{nameof(ProtectionHelper)}.{nameof(ProtectionHelper.DetectEmulation)}", detectEmulation);
-            WriteResult($"{nameof(ProtectionHelper)}.{nameof(ProtectionHelper.DetectSandbox)}", detectSandbox);
-            WriteResult($"{nameof(ProtectionHelper)}.{nameof(ProtectionHelper.DetectVirtualMachine)}", detectVirtualMachine);
-            WriteResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.DetachFromDebuggerProcess)}", detachFromDebuggerProcess);
+            WriteBooleanResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckRemoteDebugger)}", isProcessRemote);
+            WriteBooleanResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebuggerManagedPresent)}", isManagedCodesAttached);
+            WriteBooleanResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebuggerUnmanagedPresent)}", isUnManagedCodesAttached);
+            WriteBooleanResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckDebugPort)}", checkDebugPort);
+            WriteBooleanResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.CheckKernelDebugInformation)}", checkKernelDebugInformation);
+            WriteBooleanResult($"{nameof(ProtectionHelper)}.{nameof(ProtectionHelper.DetectEmulation)}", detectEmulation);
+            WriteBooleanResult($"{nameof(ProtectionHelper)}.{nameof(ProtectionHelper.DetectSandbox)}", detectSandbox);
+            WriteBooleanResult($"{nameof(ProtectionHelper)}.{nameof(ProtectionHelper.DetectVirtualMachine)}", detectVirtualMachine);
+            WriteBooleanResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.DetachFromDebuggerProcess)}", detachFromDebuggerProcess);
             AntiDebug.HideOsThreads();
             Scanner.ScanAndKill(() => Console.WriteLine("Scan and kill system any malware"));
 
@@ -74,14 +75,16 @@ namespace AntiDebugging.Demo
             return false;
         }
 
-        protected static void WriteResult(string prop, bool value)
+        protected static void WriteBooleanResult(string prop, bool value)
         {
             Console.Write($"{prop}: ");
+            WriteColoredResult(value.ToString(), value ? ConsoleColor.Red : ConsoleColor.Green);
+        }
+        protected static void WriteColoredResult(string text, ConsoleColor color)
+        {
             var originalColor = Console.ForegroundColor;
-            if (value)
-                Console.ForegroundColor = ConsoleColor.Red;
-
-            Console.WriteLine(value);
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
             Console.ForegroundColor = originalColor;
         }
     }

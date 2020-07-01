@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Management;
-using System.Net;
-using System.Net.Mime;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Text;
 using System.Threading;
 
 namespace AntiDebugging
@@ -28,7 +22,7 @@ namespace AntiDebugging
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         private static extern void BlockInput([In, MarshalAs(UnmanagedType.Bool)] bool fBlockIt);
 
-        
+
         public static bool IsAdministrator()
         {
             var identity = WindowsIdentity.GetCurrent();
@@ -69,9 +63,9 @@ namespace AntiDebugging
                 {
                     foreach (var managementBaseObject in managementObjectCollection)
                     {
-                        if ((managementBaseObject["Manufacturer"].ToString().ToLower() == "microsoft corporation" && 
-                             managementBaseObject["Model"].ToString().ToUpperInvariant().Contains("VIRTUAL")) || 
-                            managementBaseObject["Manufacturer"].ToString().ToLower().Contains("vmware") || 
+                        if ((managementBaseObject["Manufacturer"].ToString().ToLower() == "microsoft corporation" &&
+                             managementBaseObject["Model"].ToString().ToUpperInvariant().Contains("VIRTUAL")) ||
+                            managementBaseObject["Manufacturer"].ToString().ToLower().Contains("vmware") ||
                             managementBaseObject["Model"].ToString() == "VirtualBox")
                         {
                             return true;
@@ -81,7 +75,7 @@ namespace AntiDebugging
             }
             foreach (var managementBaseObject2 in new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController").Get())
             {
-                if (managementBaseObject2.GetPropertyValue("Name").ToString().Contains("VMware") && 
+                if (managementBaseObject2.GetPropertyValue("Name").ToString().Contains("VMware") &&
                     managementBaseObject2.GetPropertyValue("Name").ToString().Contains("VBox"))
                 {
                     return true;
@@ -91,12 +85,12 @@ namespace AntiDebugging
             return false;
         }
 
-        
+
         public static void ShowCmd(string title, string text, string color, int timeoutSec = 10)
         {
             Process.Start(new ProcessStartInfo("cmd.exe", "/c " + $"START CMD /C \"COLOR {color} && TITLE {title} && ECHO {text} && TIMEOUT {timeoutSec}\"")
             {
-                CreateNoWindow = true, 
+                CreateNoWindow = true,
                 UseShellExecute = false
             });
         }
