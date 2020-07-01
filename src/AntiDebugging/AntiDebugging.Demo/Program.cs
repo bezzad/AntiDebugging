@@ -8,7 +8,7 @@ namespace AntiDebugging.Demo
     {
         static void Main(string[] args)
         {
-            var mainLibVersion = Assembly.GetAssembly(typeof(AntiDebug))?.GetName().Version.ToString(3) ?? "1.0.0";
+            var mainLibVersion = Assembly.GetAssembly(typeof(AntiDebug))?.GetName().Version?.ToString(3) ?? "1.0.0";
             Console.Title = $"Anti Debugging v{mainLibVersion}";
             Console.WriteLine($"Process {Process.GetCurrentProcess().Id} is running...");
 
