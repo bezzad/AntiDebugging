@@ -63,7 +63,7 @@ namespace AntiDebugging.Demo
             WriteBooleanResult($"{nameof(ProtectionHelper)}.{nameof(ProtectionHelper.DetectVirtualMachine)}", detectVirtualMachine);
             WriteBooleanResult($"{nameof(AntiDebug)}.{nameof(AntiDebug.DetachFromDebuggerProcess)}", detachFromDebuggerProcess);
             AntiDebug.HideOsThreads();
-            Scanner.ScanAndKill(() => Console.WriteLine("Scan and kill system any malware"));
+            Scanner.ScanAndKill();
 
             if (isProcessRemote || isManagedCodesAttached || 
                 isUnManagedCodesAttached || checkDebugPort || 

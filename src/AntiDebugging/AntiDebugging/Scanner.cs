@@ -5,20 +5,17 @@ using System.Linq;
 
 namespace AntiDebugging
 {
-    public class Scanner
+    public static class Scanner
     {
         private static HashSet<string> BadProcessNameList { get; set; }
         private static HashSet<string> BadWindowTextList { get; set; }
 
 
-        public static void ScanAndKill(Action continueWith = null)
+        public static void ScanAndKill()
         {
             try
             {
-                if (Scan(true) != 0)
-                {
-                    continueWith?.Invoke();
-                }
+                Scan(true);
             }
             catch
             {
@@ -46,8 +43,7 @@ namespace AntiDebugging
                 if (BadProcessNameList.Contains(process.ProcessName.ToLower()) ||
                     BadWindowTextList.Contains(process.MainWindowTitle.ToLower()))
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("BAD PROCESS FOUND: " + process.ProcessName);
+                    Debug.Write("BAD PROCESS FOUND: " + process.ProcessName);
 
                     isBadProcess++;
 
@@ -110,6 +106,7 @@ namespace AntiDebugging
                 "importREC",
                 "immunitydebugger",
                 "megadumper",
+                "cheatengine-x86_64",
                 "dump",
                 "dbgclr",
                 "wireshark",

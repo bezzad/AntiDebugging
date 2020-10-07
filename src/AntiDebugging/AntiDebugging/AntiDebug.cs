@@ -25,7 +25,7 @@ namespace AntiDebugging
         private static extern bool CheckRemoteDebuggerPresent(SafeHandle hProcess, [MarshalAs(UnmanagedType.Bool)] ref bool isDebuggerPresent);
 
         [DllImport("ntdll.dll", SetLastError = true, ExactSpelling = true)]
-        internal static extern NtStatus NtQueryInformationProcess([In] IntPtr processHandle, [In] ProcessInfoClass processInformationClass, out IntPtr processInformation, [In] int processInformationLength, [Optional] out int returnLength);
+        internal static extern NtStatus NtQueryInformationProcess([In] IntPtr processHandle, [In] ProcessInfoClass processInformationClass, out IntPtr processInformation, [In] int processInformationLength, out int returnLength);
 
         [DllImport("ntdll.dll", SetLastError = true, ExactSpelling = true)]
         internal static extern NtStatus NtClose([In] IntPtr handle);
@@ -34,18 +34,20 @@ namespace AntiDebugging
         internal static extern NtStatus NtRemoveProcessDebug(IntPtr processHandle, IntPtr debugObjectHandle);
 
         [DllImport("ntdll.dll", SetLastError = true, ExactSpelling = true)]
-        internal static extern NtStatus NtSetInformationDebugObject([In] IntPtr debugObjectHandle, [In] DebugObjectInformationClass debugObjectInformationClass, [In] IntPtr debugObjectInformation, [In] int debugObjectInformationLength, [Out][Optional] out int returnLength);
+        internal static extern NtStatus NtSetInformationDebugObject([In] IntPtr debugObjectHandle, [In] DebugObjectInformationClass debugObjectInformationClass, [In] IntPtr debugObjectInformation, [In] int debugObjectInformationLength, [Out] out int returnLength);
 
         [DllImport("ntdll.dll", SetLastError = true, ExactSpelling = true)]
-        internal static extern NtStatus NtQuerySystemInformation([In] SystemInformationClass systemInformationClass, IntPtr systemInformation, [In] int systemInformationLength, [Out][Optional] out int returnLength);
+        internal static extern NtStatus NtQuerySystemInformation([In] SystemInformationClass systemInformationClass, IntPtr systemInformation, [In] int systemInformationLength, [Out] out int returnLength);
 
         [DllImport("ntdll.dll")]
         internal static extern NtStatus NtSetInformationThread(IntPtr threadHandle, ThreadInformationClass threadInformationClass, IntPtr threadInformation, int threadInformationLength);
 
         [DllImport("kernel32.dll")]
         static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+
         [DllImport("kernel32.dll")]
         static extern uint SuspendThread(IntPtr hThread);
+
         [DllImport("kernel32.dll")]
         static extern int ResumeThread(IntPtr hThread);
 
@@ -56,7 +58,8 @@ namespace AntiDebugging
 
 
         /// <summary>
-        /// Asks the CLR for the presence of an attached managed debugger, and never even bothers to check for the presence of a native debugger.
+        /// Asks the CLR for the presence of an attached managed debugger, 
+        /// and never even bothers to check for the presence of a native debugger.
         /// </summary>
         public static bool CheckDebuggerManagedPresent()
         {
@@ -98,7 +101,7 @@ namespace AntiDebugging
             {
                 if (debugPort == new IntPtr(-1))
                 {
-                    Console.WriteLine("DebugPort : {0:X}", debugPort);
+                    Debug.WriteLine("DebugPort : {0:X}", debugPort);
                     return true;
                 }
             }
@@ -153,7 +156,8 @@ namespace AntiDebugging
 
             unsafe
             {
-                ntStatus = NtQuerySystemInformation(SystemInformationClass.SystemKernelDebuggerInformation, new IntPtr(&pSkdi), Marshal.SizeOf(pSkdi), out retLength);
+                ntStatus = NtQuerySystemInformation(SystemInformationClass.SystemKernelDebuggerInformation, new IntPtr(&pSkdi),
+                    Marshal.SizeOf(pSkdi), out retLength);
 
                 if (ntStatus == NtStatus.Success)
                 {
@@ -173,22 +177,19 @@ namespace AntiDebugging
 
             foreach (ProcessThread thread in currentThreads)
             {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("[GetOSThreads]: thread.Id {0:X}", thread.Id);
+                Debug.WriteLine("[GetOSThreads]: thread.Id {0:X}", thread.Id);
 
                 var pOpenThread = OpenThread(ThreadAccess.SetInformation, false, (uint)thread.Id);
 
                 if (pOpenThread == IntPtr.Zero)
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("[GetOSThreads]: skipped thread.Id {0:X}", thread.Id);
+                    Debug.WriteLine("[GetOSThreads]: skipped thread.Id {0:X}", thread.Id);
                     continue;
                 }
 
                 if (HideThreadFromDebugger(pOpenThread))
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("[GetOSThreads]: thread.Id {0:X} hidden from debugger.", thread.Id);
+                    Debug.WriteLine("[GetOSThreads]: thread.Id {0:X} hidden from debugger.", thread.Id);
                 }
 
                 CloseHandle(pOpenThread);
