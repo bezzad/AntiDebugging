@@ -65,7 +65,10 @@ namespace AntiDebugging.Demo
             AntiDebug.HideOsThreads();
             Scanner.ScanAndKill(() => Console.WriteLine("Scan and kill system any malware"));
 
-            if (isProcessRemote || isManagedCodesAttached || isUnManagedCodesAttached)
+            if (isProcessRemote || isManagedCodesAttached || 
+                isUnManagedCodesAttached || checkDebugPort || 
+                checkKernelDebugInformation || detectEmulation || 
+                detectSandbox || detectVirtualMachine)
             {
                 ProtectionHelper.FreezeMouse();
                 ProtectionHelper.ShowCmd("Protector", "Active debugger found!", "C");

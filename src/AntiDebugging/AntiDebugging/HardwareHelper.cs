@@ -53,6 +53,35 @@ namespace AntiDebugging
             }
             return result;
         }
+        
+        /// <summary>
+        /// Return a hardware identifier
+        /// </summary>
+        [SuppressMessage("ReSharper", "PossibleInvalidCastExceptionInForeachLoop")]
+        private static string Identifier(string wmiClass, string wmiProperty)
+        {
+            var result = "";
+            var mc = new ManagementClass(wmiClass);
+            var moc = mc.GetInstances();
+            foreach (ManagementObject mo in moc)
+            {
+                //Only get the first one
+                if (result == "")
+                {
+                    try
+                    {
+                        result = mo[wmiProperty].ToString();
+                        break;
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+            }
+            return result;
+        }
+        
         private static string GetMd5Hash(this string s)
         {
             using MD5 sec = new MD5CryptoServiceProvider();
@@ -83,33 +112,7 @@ namespace AntiDebugging
             return s;
         }
 
-        /// <summary>
-        /// Return a hardware identifier
-        /// </summary>
-        [SuppressMessage("ReSharper", "PossibleInvalidCastExceptionInForeachLoop")]
-        private static string Identifier(string wmiClass, string wmiProperty)
-        {
-            var result = "";
-            var mc = new ManagementClass(wmiClass);
-            var moc = mc.GetInstances();
-            foreach (ManagementObject mo in moc)
-            {
-                //Only get the first one
-                if (result == "")
-                {
-                    try
-                    {
-                        result = mo[wmiProperty].ToString();
-                        break;
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
-            }
-            return result;
-        }
+
         private static string CpuId()
         {
             //Uses first CPU identifier available in order of preference
